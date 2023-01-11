@@ -17,9 +17,9 @@ public class TestClass {
         InputNeuron in4 = neuralNetwork.createInputNeuron();
 
         neuralNetwork.createHiddenNeurons1(100);
-        neuralNetwork.setActivationFunctionHidden1(ActivationFunction.ActivationIdentity);
-        neuralNetwork.createHiddenNeurons2(100);
-        neuralNetwork.setActivationFunctionHidden2(ActivationFunction.ActivationSigmoid);
+        neuralNetwork.setActivationFunctionHidden1(ActivationFunction.ActivationSigmoid);
+        neuralNetwork.createHiddenNeurons2(15);
+        neuralNetwork.setActivationFunctionHidden2(ActivationFunction.ActivaionHyperbolicTanget);
 
         WorkingNeuron out1 = neuralNetwork.createWorkingNeuron();
         WorkingNeuron out2 = neuralNetwork.createWorkingNeuron();

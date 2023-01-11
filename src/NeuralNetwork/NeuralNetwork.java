@@ -171,7 +171,7 @@ public class NeuralNetwork {
             for (int i = 0; i < outPutNeurons.size(); i++) {
                 outPutNeurons.get(i).backpropagateSmallDelta();
             }
-            for (int i = 0; i < hiddenNeurons1.size(); i++) {
+            for (int i = 0; i < hiddenNeurons2.size(); i++) {
                 hiddenNeurons2.get(i).backpropagateSmallDelta();
             }
         }else if(hiddenNeurons1.size() >0){
