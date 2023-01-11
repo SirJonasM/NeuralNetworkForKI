@@ -19,9 +19,9 @@ public class TestClass {
         WorkingNeuron out2 = neuralNetwork.createWorkingNeuron();
         WorkingNeuron out3 = neuralNetwork.createWorkingNeuron();
 
-        //neuralNetwork.createBias();
+        neuralNetwork.createBias();
         neuralNetwork.createFullConnections();
-        double[][] inputs = Einlesen.einlesen("C:\\Users\\jonas\\IdeaProjects\\NeuralNetwork\\src\\Einlesen\\Iris.txt");
+        double[][] inputs = Einlesen.einlesen("src/Einlesen/Iris.txt");
 
         int epochen = 2_000_000;
         for(int i = 0; i<epochen; i++) {
@@ -33,7 +33,7 @@ public class TestClass {
                 if(fehlerCalculated)
                     fehler++;
 
-                neuralNetwork.backpropagation(new double[]{input[4],input[5],input[6]}, 0.00000001);
+                neuralNetwork.backpropagation(new double[]{input[4],input[5],input[6]}, 0.01);
                 neuralNetwork.reset();
             }
             System.out.printf("In der Epoche %d wurde zu %d%% richtig geraten. | (%d/%d)\n",i,(int) (100 - (fehler*100.0)/inputs.length),inputs.length-fehler,inputs.length);
