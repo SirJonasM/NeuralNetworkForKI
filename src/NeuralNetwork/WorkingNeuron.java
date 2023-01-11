@@ -1,6 +1,8 @@
 package NeuralNetwork;
 
 
+import NeuralNetwork.ActivationFunction.ActivationFunction;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,15 +50,20 @@ public class WorkingNeuron extends Neuron {
     }
 
     public void deltaLearning(double learnRate) {
-        for(Connection connection : connections){
-            connection.updateWeight(activationFunction.derivative(getValue())*smallDelta * learnRate * connection.getNeuron().getValue());
+        double bigDeltaFactor = activationFunction.derivative(getValue())* learnRate * smallDelta;
+        for(int i = 0; i<connections.size();i++){
+            double bigDelta = bigDeltaFactor  *connections.get(i).getNeuron().getValue();
+            connections.get(i).updateWeight(bigDelta);
         }
-        if(hasBias) biasConnection.updateWeight(smallDelta * learnRate);
+        if(hasBias) biasConnection.updateWeight(bigDeltaFactor);
     }
 
     public void addBiasNeuron(Connection connection) {
         hasBias = true;
         biasConnection = connection;
+    }
+    public void setActivationFunction(ActivationFunction activationFunction){
+        this.activationFunction = activationFunction;
     }
 
     @Override
