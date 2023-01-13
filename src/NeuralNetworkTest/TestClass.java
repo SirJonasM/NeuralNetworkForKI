@@ -32,7 +32,7 @@ public class TestClass {
 
         neuralNetwork.createBias();
         neuralNetwork.createFullConnections(true);
-        double[][] inputs = Einlesen.einlesen("src/Einlesen/wetter.txt");
+        double[][] inputs = Einlesen.einlesen("src/Einlesen/wetter.txt",new int[]{0,1},new String[]{"0","1"},2);
         int fehler;
         int epochen = 20000;
         for(int i = 0; i<epochen; i++) {
@@ -57,7 +57,7 @@ public class TestClass {
             System.out.printf("In der Epoche %d wurde zu %d%% richtig geraten. | (%d/%d)\n",i,(int) (100 - (fehler*100.0)/inputs.length),inputs.length-fehler,inputs.length);
             if(fehler == 0)break;
         }
-        inputs = Einlesen.einlesen("src/Einlesen/wetter2.txt");
+        inputs = Einlesen.einlesen("src/Einlesen/wetter2.txt",new int[]{0,1},new String[]{"0","1"},2);
         fehler = 0;
         for (double[] input: inputs) {
             in1.setValue(input[0]);
