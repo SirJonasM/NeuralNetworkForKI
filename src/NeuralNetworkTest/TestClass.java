@@ -13,9 +13,10 @@ public class TestClass {
     private static final int features = 4;
     public static final int clazzId = 4;
     private static final int outputs = 3;
+    private static final String[] clazzes = new String[]{"1","2","3"};
 
     public static void main(String[] args) throws FileNotFoundException {
-        double[][] inputs = Einlesen.einlesen("src/Einlesen/Iris.txt",features,new String[]{"1","2","3"},clazzId);
+        double[][] inputs = Einlesen.einlesen("src/Einlesen/acceleration.txt",features,clazzes,clazzId);
         NeuralNetwork neuralNetwork = new NeuralNetwork();
         InputNeuron[] inputNeurons = new InputNeuron[features];
         WorkingNeuron[] outputNeurons = new WorkingNeuron[outputs];
@@ -26,17 +27,21 @@ public class TestClass {
         for(int i = 0;i<outputs;i++){
             outputNeurons[i] = neuralNetwork.createWorkingNeuron();
         }
-        neuralNetwork.createHiddenNeurons1(100);
-        neuralNetwork.setActivationFunctionHidden1(ActivationFunction.ActivationIdentity);
-        neuralNetwork.createHiddenNeurons2(10);
-        neuralNetwork.setActivationFunctionHidden2(ActivationFunction.ActivationHyperbolicTanget);
+        neuralNetwork.createHiddenLayer(10,ActivationFunction.ActivationSigmoid);
+        neuralNetwork.createHiddenLayer(11,ActivationFunction.ActivationSigmoid);
+        neuralNetwork.createHiddenLayer(12,ActivationFunction.ActivationSigmoid);
 
-        neuralNetwork.setActivationFunctionOutput(ActivationFunction.ActivationSigmoid);
 
         neuralNetwork.createBias();
         neuralNetwork.createFullConnections(true);
+        neuralNetwork.setActivationFunctionOutput(activationFunction);
+
         int fehler;
-        int epochen = 20000;
+        int epochen = 5;
+
+        for(int in = 0;in<inputNeurons.length;in++){
+            inputNeurons[in].setValue(inputs[0][in]);
+        }
         for(int i = 0; i<epochen; i++) {
             fehler = 0;
             for (double[] input: inputs) {
@@ -46,14 +51,15 @@ public class TestClass {
                 double[] clazzes = getClazzes(input);
                 if(isFalse(outputNeurons,clazzes)) {
                     fehler++;
-                    neuralNetwork.backpropagation(clazzes, learnrate);
                 }
+
+                neuralNetwork.backpropagation(clazzes, learnrate);
                 neuralNetwork.reset();
             }
-            if(i%100 == 0) System.out.printf("In der Epoche %d wurde zu %d%% richtig geraten. | (%d/%d)\n",i,(int) (100 - (fehler*100.0)/inputs.length),inputs.length-fehler,inputs.length);
+            if(true) System.out.printf("In der Epoche %d wurde zu %d%% richtig geraten. | (%d/%d)\n",i,(int) (100 - (fehler*100.0)/inputs.length),inputs.length-fehler,inputs.length);
             if(fehler == 0)break;
         }
-        inputs = Einlesen.einlesen("src/Einlesen/Iris.txt",features,new String[]{"1","2","3"},clazzId);
+        inputs = Einlesen.einlesen("src/Einlesen/acceleration2.txt",features,clazzes,clazzId);
         fehler = 0;
         for (double[] input: inputs) {
             for(int in = 0;in<inputNeurons.length;in++){
@@ -64,8 +70,10 @@ public class TestClass {
                 fehler++;
             neuralNetwork.reset();
         }
-        System.out.printf("Evaluation anhand von %d Mustern: ",inputs.length);
-        System.out.println(((double)(inputs.length-fehler)/(double) inputs.length)*100  + "%");
+        double fehlerQuote = ((double)(inputs.length-fehler)/((double) inputs.length));
+        fehlerQuote = fehlerQuote*100;
+        fehlerQuote = Math.round(fehlerQuote);
+        System.out.printf("Evaluation anhand von %d Mustern: %f%% richtig geraten. - (%d/%d) ",inputs.length,fehlerQuote,(inputs.length-fehler),inputs.length);
     }
 
     private static double[] getClazzes(double[] input) {
@@ -74,18 +82,16 @@ public class TestClass {
         return r;
     }
 
-
     private static boolean isFalse(WorkingNeuron[] outputNeurons, double[] clazzes) {
         for(int i = 0;i<outputNeurons.length;i++){
             int out = getOutput(outputNeurons[i]);
             if(out != clazzes[i]) return true;
         }
         return false;
-
     }
 
     public static int getOutput(WorkingNeuron out){
-        return (int) activationFunction.activation(out.getValue()-0.5);
+        return (int)out.getValue();
     }
 
 }
