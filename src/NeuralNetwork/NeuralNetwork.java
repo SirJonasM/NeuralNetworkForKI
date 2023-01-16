@@ -8,9 +8,8 @@ import java.util.List;
 public class NeuralNetwork {
 
     List<InputNeuron> inputNeurons =  new ArrayList<>();
+    List<ArrayList<WorkingNeuron>> hiddenLayers = new ArrayList<>();
     List<WorkingNeuron> outPutNeurons = new ArrayList<>();
-    List<WorkingNeuron> hiddenNeurons2 = new ArrayList<>();
-    List<WorkingNeuron> hiddenNeurons1 = new ArrayList<>();
     List<InputNeuron> biasNeurons = new ArrayList<>();
 
     public InputNeuron createInputNeuron(){
@@ -23,140 +22,168 @@ public class NeuralNetwork {
         outPutNeurons.add(out);
         return out;
     }
-    public void createHiddenNeurons1(int amount){
+    public void createHiddenLayer(int amount,ActivationFunction activationFunction){
+        ArrayList<WorkingNeuron> hiddens = new ArrayList<>();
         for(int i = 0; i<amount;i++){
-            hiddenNeurons1.add(new WorkingNeuron());
+            WorkingNeuron workingNeuron = new WorkingNeuron();
+            workingNeuron.setActivationFunction(activationFunction);
+            hiddens.add(workingNeuron);
         }
-    }
-    public void createHiddenNeurons2(int amount){
-        for(int i = 0; i<amount;i++){
-            hiddenNeurons2.add(new WorkingNeuron());
-        }
-    }
-    public void setActivationFunctionHidden1(ActivationFunction activationFunction){
-        hiddenNeurons1.forEach(n -> n.setActivationFunction(activationFunction));
-    }
-    public void setActivationFunctionHidden2(ActivationFunction activationFunction){
-        hiddenNeurons2.forEach(n -> n.setActivationFunction(activationFunction));
-    }
+        hiddenLayers.add(hiddens);
 
+    }
     public void setActivationFunctionOutput(ActivationFunction activationFunction){
         outPutNeurons.forEach(n -> n.setActivationFunction(activationFunction));
     }
     public void createBias(){
-        biasNeurons.add(new InputNeuron(1));
-        biasNeurons.add(new InputNeuron(1));
-        biasNeurons.add(new InputNeuron(1));
+        for(int i = 0; i<hiddenLayers.size()+1;i++) {
+            biasNeurons.add(new InputNeuron(1));
+        }
     }
     public void createFullConnections(){
         addBias();
-        if(hiddenNeurons1.size() == 0){
+        if(hiddenLayers.size() == 0){
             for(WorkingNeuron out : outPutNeurons){
                 for(InputNeuron in : inputNeurons){
                     out.addConnection(new Connection(in,1));
                 }
             }
-        }else if (hiddenNeurons2.size() == 0){
+        }else if (hiddenLayers.size() == 1){
             for(WorkingNeuron out : outPutNeurons){
-                for(WorkingNeuron hidden : hiddenNeurons1){
+                for(WorkingNeuron hidden : hiddenLayers.get(0)){
                     out.addConnection(new Connection(hidden,1));
                 }
             }
             for(InputNeuron in : inputNeurons){
-                for(WorkingNeuron hidden : hiddenNeurons1){
+                for(WorkingNeuron hidden : hiddenLayers.get(0)){
                     hidden.addConnection(new Connection(in,1));
                 }
             }
         }else{
             for(WorkingNeuron out : outPutNeurons){
-                for(WorkingNeuron hidden : hiddenNeurons2){
+                for(WorkingNeuron hidden : hiddenLayers.get(hiddenLayers.size()-1)){
                     out.addConnection(new Connection(hidden,1));
                 }
             }
-            for(WorkingNeuron hidden1 : hiddenNeurons1){
-                for(WorkingNeuron hidden2 : hiddenNeurons2){
-                    hidden2.addConnection(new Connection(hidden1,1));
+            for(int i = 0;i<hiddenLayers.size()-1;i++) {
+                for (WorkingNeuron hidden1 : hiddenLayers.get(i)) {
+                    for (WorkingNeuron hidden2 : hiddenLayers.get(i+1)) {
+                        hidden2.addConnection(new Connection(hidden1, 1));
+                    }
                 }
             }
             for(InputNeuron in : inputNeurons){
-                for(WorkingNeuron hidden : hiddenNeurons1){
+                for(WorkingNeuron hidden : hiddenLayers.get(0)){
                     hidden.addConnection(new Connection(in,1));
                 }
             }
         }
     }
     public void createFullConnections(double... weights){
-        int i = 0;
         addBias();
-        if(hiddenNeurons1.size() == 0){
-            if (weights.length != inputNeurons.size()*outPutNeurons.size())
-                throw new RuntimeException();
+        if(hiddenLayers.size() == 0){
             for(WorkingNeuron out : outPutNeurons){
                 for(InputNeuron in : inputNeurons){
-                    out.addConnection(new Connection(in, weights[i++]));
+                    out.addConnection(new Connection(in,1));
+                }
+            }
+        }else if (hiddenLayers.size() == 1){
+            for(WorkingNeuron out : outPutNeurons){
+                for(WorkingNeuron hidden : hiddenLayers.get(0)){
+                    out.addConnection(new Connection(hidden,1));
+                }
+            }
+            for(InputNeuron in : inputNeurons){
+                for(WorkingNeuron hidden : hiddenLayers.get(0)){
+                    hidden.addConnection(new Connection(in,1));
                 }
             }
         }else{
-            if (weights.length != hiddenNeurons1.size()*outPutNeurons.size() + inputNeurons.size()  * hiddenNeurons1.size())
-                throw new RuntimeException();
-            for(WorkingNeuron hidden : hiddenNeurons1){
-                for(InputNeuron in : inputNeurons){
-                    hidden.addConnection(new Connection(in,weights[i++]));
+            for(WorkingNeuron out : outPutNeurons){
+                for(WorkingNeuron hidden : hiddenLayers.get(hiddenLayers.size()-1)){
+                    out.addConnection(new Connection(hidden,1));
                 }
             }
-            for(WorkingNeuron out : outPutNeurons){
-                for(WorkingNeuron hidden : hiddenNeurons1){
-                    out.addConnection(new Connection(hidden,weights[i++]));
+            for(int i = 0;i<hiddenLayers.size()-1;i++) {
+                for (WorkingNeuron hidden1 : hiddenLayers.get(i)) {
+                    for (WorkingNeuron hidden2 : hiddenLayers.get(i+1)) {
+                        hidden2.addConnection(new Connection(hidden1, 1));
+                    }
+                }
+            }
+            for(InputNeuron in : inputNeurons){
+                for(WorkingNeuron hidden : hiddenLayers.get(0)){
+                    hidden.addConnection(new Connection(in,1));
                 }
             }
         }
     }
 
     private void addBias() {
-        if(biasNeurons.size() == 3){
-            for(WorkingNeuron hiddenNeuron: hiddenNeurons1) {
-                hiddenNeuron.addBiasNeuron(new Connection(biasNeurons.get(0), 1));
-            }
+        if(biasNeurons.size() == hiddenLayers.size()+1){
             for(WorkingNeuron outPutNeuron: outPutNeurons){
-                outPutNeuron.addBiasNeuron(new Connection(biasNeurons.get(1),1));
+                outPutNeuron.addBiasNeuron(new Connection(biasNeurons.get(0),1));
             }
-            for(WorkingNeuron hiddenNeuron: hiddenNeurons2) {
-                hiddenNeuron.addBiasNeuron(new Connection(biasNeurons.get(2), 1));
+            int bias = 1;
+            for(ArrayList<WorkingNeuron> hiddens : hiddenLayers) {
+                for (WorkingNeuron hiddenNeuron : hiddens) {
+                    hiddenNeuron.addBiasNeuron(new Connection(biasNeurons.get(bias), 1));
+                }
+                bias++;
             }
         }
     }
 
     public void createFullConnections(boolean random){
         addBias();
-        if(hiddenNeurons1.size() == 0){
+        if(hiddenLayers.size() == 0){
             for(WorkingNeuron out : outPutNeurons){
                 for(InputNeuron in : inputNeurons){
-                    out.addConnection(new Connection(in, Math.random()*2-1));
+                    out.addConnection(new Connection(in,Math.random()*2-1));
                 }
             }
-        }else{
+        }else if (hiddenLayers.size() == 1){
             for(WorkingNeuron out : outPutNeurons){
-                for(WorkingNeuron hidden : hiddenNeurons1){
+                for(WorkingNeuron hidden : hiddenLayers.get(0)){
                     out.addConnection(new Connection(hidden,Math.random()*2-1));
                 }
             }
             for(InputNeuron in : inputNeurons){
-                for(WorkingNeuron hidden : hiddenNeurons1){
+                for(WorkingNeuron hidden : hiddenLayers.get(0)){
+                    hidden.addConnection(new Connection(in,Math.random()*2-1));
+                }
+            }
+        }else{
+            for(WorkingNeuron out : outPutNeurons){
+                for(WorkingNeuron hidden : hiddenLayers.get(hiddenLayers.size()-1)){
+                    out.addConnection(new Connection(hidden,Math.random()*2-1));
+                }
+            }
+            for(int i = 0;i<hiddenLayers.size()-1;i++) {
+                for (WorkingNeuron hidden1 : hiddenLayers.get(i)) {
+                    for (WorkingNeuron hidden2 : hiddenLayers.get(i+1)) {
+                        hidden2.addConnection(new Connection(hidden1, Math.random()*2-1));
+                    }
+                }
+            }
+            for(InputNeuron in : inputNeurons){
+                for(WorkingNeuron hidden : hiddenLayers.get(0)){
                     hidden.addConnection(new Connection(in,Math.random()*2-1));
                 }
             }
         }
+
     }
     public void reset(){
         for(WorkingNeuron out : outPutNeurons){
             out.reset();
         }
-        for(WorkingNeuron hidden : hiddenNeurons1){
-            hidden.reset();
+        for(ArrayList<WorkingNeuron> hiddens : hiddenLayers) {
+            for (WorkingNeuron hidden : hiddens) {
+                hidden.reset();
+            }
         }
-        for(WorkingNeuron hidden : hiddenNeurons2){
-            hidden.reset();
-        }
+
     }
 
     public void backpropagation(double[] classes, double learnRate){
@@ -167,26 +194,23 @@ public class NeuralNetwork {
         for(int i = 0; i<classes.length;i++){
             outPutNeurons.get(i).calculateDelta(classes[i]);
         }
-        if(hiddenNeurons2.size() >0){
-            for (int i = 0; i < outPutNeurons.size(); i++) {
-                outPutNeurons.get(i).backpropagateSmallDelta();
+        if(hiddenLayers.size() > 0){
+            for (WorkingNeuron outPutNeuron : outPutNeurons) {
+                outPutNeuron.backpropagateSmallDelta();
             }
-            for (int i = 0; i < hiddenNeurons2.size(); i++) {
-                hiddenNeurons2.get(i).backpropagateSmallDelta();
-            }
-        }else if(hiddenNeurons1.size() >0){
-            for (int i = 0; i < classes.length; i++) {
-                outPutNeurons.get(i).backpropagateSmallDelta();
+            for(int i = hiddenLayers.size()-1; i>=0;i--){
+                for(WorkingNeuron workingNeuron : hiddenLayers.get(i)){
+                    workingNeuron.backpropagateSmallDelta();
+                }
             }
         }
         for (WorkingNeuron outPutNeuron : outPutNeurons) {
             outPutNeuron.deltaLearning(learnRate);
         }
-        for (WorkingNeuron hiddenNeuron : hiddenNeurons2) {
-            hiddenNeuron.deltaLearning(learnRate);
-        }
-        for (WorkingNeuron hiddenNeuron : hiddenNeurons1) {
-            hiddenNeuron.deltaLearning(learnRate);
+        for(ArrayList<WorkingNeuron> hiddens : hiddenLayers) {
+            for (WorkingNeuron hiddenNeuron : hiddens) {
+                hiddenNeuron.deltaLearning(learnRate);
+            }
         }
 
 
@@ -195,11 +219,8 @@ public class NeuralNetwork {
     @Override
     public String toString() {
         StringBuilder text = new StringBuilder();
-        for (int i = 0;i<inputNeurons.size();i++) {
-            text.append(inputNeurons.get(i).toString());
-        }
-        for (WorkingNeuron hiddenNeuron : hiddenNeurons1){
-            text.append(hiddenNeuron);
+        for (InputNeuron inputNeuron : inputNeurons) {
+            text.append(inputNeuron.toString());
         }
         for (WorkingNeuron outputNeuron : outPutNeurons){
             text.append(outputNeuron);
