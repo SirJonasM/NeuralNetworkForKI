@@ -1,11 +1,14 @@
 package Gui;
 
+import NeuralNetwork.NeuralNetwork;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.AttributedCharacterIterator;
 import java.util.Random;
 
 public class Screen extends JPanel implements Runnable, KeyListener, MouseListener {
@@ -39,6 +42,8 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
     @Override
     public void run() {
         while (myThread != null) {
+            /*
+
 
             double drawInterval = 1000000000 / FPS; // 0.01666 seconds
             double nextDrawTime = System.nanoTime() + drawInterval;
@@ -61,11 +66,17 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+
+            */
         }
     }
 
     public void update() {
 
+    }
+
+    public static double getNeurons(){
+        return 0.0;
     }
 
     public void paintComponent(Graphics g) {
@@ -76,6 +87,7 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
         //g.drawOval(10, 10, 10, 10);
         //drawNeurons(10, 200, g);
         //drawNeurons(7, 300, g);
+        //g.drawString((AttributedCharacterIterator) NeuralNetwork.getInputNeurons(), 10, 10);
         int[] neuronsPerColumn = {10, 7, 5, 15, 3, 1};
         drawAllNeurons(neuronsPerColumn, g);
     }

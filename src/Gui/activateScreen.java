@@ -2,7 +2,7 @@ package Gui;
 
 import javax.swing.*;
 
-public class main {
+public class activateScreen {
 
     public static void main(String[] args) {
         JFrame window = new JFrame();

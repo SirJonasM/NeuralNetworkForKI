@@ -1,5 +1,6 @@
 package NeuralNetworkTest;
 
+import Gui.activateScreen;
 import NeuralNetwork.*;
 import NeuralNetwork.ActivationFunction.*;
 
@@ -16,6 +17,7 @@ public class TestClass {
     private static final String[] clazzes = new String[]{"1","2","3"};
 
     public static void main(String[] args) throws FileNotFoundException {
+        activateScreen.main(null);
         double[][] inputs = Einlesen.einlesen("src/Einlesen/acceleration.txt",features,clazzes,clazzId);
         NeuralNetwork neuralNetwork = new NeuralNetwork();
         InputNeuron[] inputNeurons = new InputNeuron[features];
@@ -58,6 +60,7 @@ public class TestClass {
             }
             if(true) System.out.printf("In der Epoche %d wurde zu %d%% richtig geraten. | (%d/%d)\n",i,(int) (100 - (fehler*100.0)/inputs.length),inputs.length-fehler,inputs.length);
             if(fehler == 0)break;
+
         }
         inputs = Einlesen.einlesen("src/Einlesen/acceleration2.txt",features,clazzes,clazzId);
         fehler = 0;
