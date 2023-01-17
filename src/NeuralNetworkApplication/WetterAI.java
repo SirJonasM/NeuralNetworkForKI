@@ -7,7 +7,7 @@ import NeuralNetwork.ActivationFunction.ActivationFunction;
 import java.io.FileNotFoundException;
 
 public class WetterAI {
-    static int[][] function = new  int [100][100];
+    static double[][] function = new  double[100][100];
     static int epochen = 20_000;
     static NeuralNetwork neuralNetwork;
     static InputNeuron in1;
@@ -79,9 +79,9 @@ public class WetterAI {
         }
         System.out.println("tested: " + fails);
         fillFunction();
-        for(int[] i : function){
-            for(int z : i){
-                System.out.print(z);
+        for(double[] i : function){
+            for(double z : i){
+                System.out.print(Math.round(z*1000.0)/1000.0 +" ");
             }
             System.out.println();
         }
@@ -99,7 +99,7 @@ public class WetterAI {
                 in1.setValue(x/100.0);
                 in2.setValue(y/100.0);
 
-                function[function.length-y-1][x] = (int) out1.getValue();
+                function[function.length-y-1][x] =  out1.getValueRaw();
             }
         }
     }

@@ -90,7 +90,7 @@ public class TestClass {
     }
 
     public static int getOutput(WorkingNeuron out){
-        return (int)out.getValue();
+        return (int) out.getValue();
     }
 
 }
