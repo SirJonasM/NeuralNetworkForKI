@@ -1,19 +1,20 @@
 package NeuralNetworkApplication;
 
 import Einlesen.Einlesen;
+import Gui.ArrayToImage;
 import NeuralNetwork.*;
 import NeuralNetwork.ActivationFunction.ActivationFunction;
 
 import java.io.FileNotFoundException;
 
 public class WetterAI {
-    static double[][] function = new  double[100][100];
+    static double[][] function;
     static int epochen = 20_000;
     static NeuralNetwork neuralNetwork;
     static InputNeuron in1;
     static InputNeuron in2;
     static WorkingNeuron out1;
-    private static final double  learnRate = 0.01;
+    private static final double  learnRate = 0.0001;
 
     public static void main(String[] args) throws FileNotFoundException {
         //Creating Neural Network
@@ -27,8 +28,8 @@ public class WetterAI {
         int x = 10;
         neuralNetwork.createHiddenLayer(x,ActivationFunction.ActivationSigmoid);
 //        you can add another Hidden Layer if u wish with
-//        int y = 100;
-//        neuralNetwork.createHiddenLayer(y,ActivationFunction.ActivationSigmoid);
+        int y = 100;
+        neuralNetwork.createHiddenLayer(y,ActivationFunction.ActivationSigmoid);
 
 
 //        Adding a Output Neuron
@@ -78,7 +79,7 @@ public class WetterAI {
             }
         }
         System.out.println("tested: " + fails);
-        fillFunction();
+        fillFunction(800,800);
         for(double[] i : function){
             for(double z : i){
                 System.out.print(Math.round(z*1000.0)/1000.0 +" ");
@@ -86,20 +87,26 @@ public class WetterAI {
             System.out.println();
         }
         neuralNetwork.reset();
-        in1.setValue(90/100.);
-        in2.setValue(90/100.);
-
-        System.out.println(out1.getValue());
+        double minWert = 0;
+        double maxWert = 0;
+        for(double[] i : function){
+            for (double z : i){
+                if (minWert>z) minWert = z;
+                if(maxWert<z) maxWert = z;
+            }
+        }
+        ArrayToImage.createImage(function,1/maxWert,-1/minWert);
     }
 
-    public static void fillFunction(){
-        for(int x = 0;x<function.length;x++) {
-            for (int y = 0; y < function.length; y++) {
+    public static void fillFunction(double x, double y){
+        function = new double[(int) y][(int) x];
+        for(int i = 0;i<x;i++) {
+            for (int z = 0; z < x; z++) {
                 neuralNetwork.reset();
-                in1.setValue(x/100.0);
-                in2.setValue(y/100.0);
+                in1.setValue(i/x);
+                in2.setValue(z/y);
 
-                function[function.length-y-1][x] =  out1.getValueRaw();
+                function[function.length-z-1][i] =  out1.getValueRaw();
             }
         }
     }
