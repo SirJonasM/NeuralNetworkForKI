@@ -20,18 +20,29 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
     final int screenWidth = 1000;
     final int screenHeight = 700;
 
+    final int neuronSize = 30;
+    InputNeuron[] inputNeurons = activateScreen.getInputNeuronsLocal();
+    WorkingNeuron[] outputNeurons = activateScreen.getOutputNeuronsLocal();
+    List<ArrayList<WorkingNeuron>> hiddenLayers = new ArrayList<>();
+
+    List<Integer> neuronPos = new ArrayList<>();
+    int length;
+
+    static int[] color = { 0, 0, 255 };
+
+    /*
     public static double f = 0;
     public static int time = 0;
 
     int FPS = 40;
-
+     */
 
     Thread myThread;
     private JPanel MainPanel;
 
     public Screen() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        //this.setBackground(Color.black);
+        this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.setFocusable(true);
         setLayout(new BorderLayout(0, 0));
@@ -80,10 +91,6 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
 
     }
 
-    public static double getNeurons(){
-        return 0.0;
-    }
-
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.black);
@@ -93,30 +100,93 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
         //drawNeurons(10, 200, g);
         //drawNeurons(7, 300, g);
         //g.drawString((AttributedCharacterIterator) NeuralNetwork.getInputNeurons(), 10, 10);
-        InputNeuron[] inputNeurons = activateScreen.getInputNeuronsLocal();
-        WorkingNeuron[] outputNeurons = activateScreen.getOutputNeuronsLocal();
-        List<ArrayList<WorkingNeuron>> hiddenLayers = NeuralNetwork.getHiddenLayers();
+        //inputNeurons = activateScreen.getInputNeuronsLocal();
+        //outputNeurons = activateScreen.getOutputNeuronsLocal();
+        hiddenLayers = NeuralNetwork.getHiddenLayers();
         System.out.print("\n- - - PaintComponent - - - ");
-        int[] neuronsPerColumn = {inputNeurons.length, outputNeurons.length};
+        int n = hiddenLayers.size();
+        int[] neuronsPerColumn = new int[n+2];
+        neuronsPerColumn[0] = inputNeurons.length;
+        for(int i = 1; i<n+1; i++){
+            neuronsPerColumn[i] = hiddenLayers.get(i-1).size();
+        }
+        neuronsPerColumn[n+1] = outputNeurons.length;
         drawAllNeurons(neuronsPerColumn, g);
     }
 
     public void drawAllNeurons(int[] neuronsPerColumn, Graphics g){
-
+        int status = 0;
+        /*
+        status:
+        <0|>2 = nothing
+        1 = drawHiddenConnections
+        2 = drawOutputConnections
+         */
+        int xPos = screenWidth/(neuronsPerColumn.length+1);
         for(int i = 0; i<neuronsPerColumn.length; i++){
-            drawNeurons(neuronsPerColumn[i], 200 + i*(200), g);
+            if(i == 1){
+                status = 1;
+            } if (i == neuronsPerColumn.length-1) {
+                status = 2;
+            }
+            drawNeurons(neuronsPerColumn[i], xPos + (i*xPos), g, status, xPos);
+            /*
+            if(i>0 && i<neuronsPerColumn.length-1){
+                drawHiddenConnections(g);
+            } else if (i==neuronsPerColumn.length-1) {
+                drawOutputConnections(g);
+            }
+             */
         }
     }
 
-    public void drawNeurons(int n, int xPos, Graphics g){
+    public void drawNeurons(int n, int xPos, Graphics g, int status, int xPosFactor){
         if(n == 0){
             return;
         }
+        g.setColor(Color.RED);
         int yPos = (screenHeight)/(n+1);
-
         for(int i = 0; i<n; i++){
-            g.drawOval(xPos, yPos + (i*yPos), 10, 10);
+            g.fillOval(xPos, yPos + (i*yPos), neuronSize, neuronSize);
+            if(status == 2){
+                drawOutputConnections(g, xPos, yPos+(i*yPos), xPos - xPosFactor);
+            }
+            else if(status == 1){
+                drawHiddenConnections(g, xPos, yPos+(i*yPos), xPos - xPosFactor, i);
+            }
         }
+        neuronPos.clear();
+        for(int i = 0; i<n; i++){
+            length = n;
+            neuronPos.add(yPos + (i*yPos));
+        }
+
+    }
+
+    public void drawHiddenConnections(Graphics g, int xPos, int yPos, int xPosPrev, int neuronID){
+        for(int i = 0; i<length; i++){
+
+            //setColor(hiddenLayers.get(neuronID).get(i));
+            g.setColor(new Color(color[0], color[1], color[2]));
+            g.drawLine(xPos+neuronSize/2, yPos+neuronSize/2, xPosPrev+neuronSize/2, neuronPos.get(i)+neuronSize/2);
+        }
+    }
+
+    public void drawOutputConnections(Graphics g, int xPos, int yPos, int xPosPrev){
+        for(int i = 0; i<length; i++){
+            setColor(0.1);
+            g.setColor(new Color(color[0], color[1], color[2]));
+            g.drawLine(xPos+neuronSize/2, yPos+neuronSize/2, xPosPrev+neuronSize/2, neuronPos.get(i)+neuronSize/2);
+        }
+    }
+
+
+
+
+    public static void setColor(double value) {
+        double c = value*255;
+        color[0] = (int) c;
+        color[2] = 255 - (int)c;
     }
 
     @Override

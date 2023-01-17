@@ -26,6 +26,10 @@ public class Connection {
     public double getWeight() {
         return weight;
     }
+
+    public double getIndex(){
+        return weight;
+    }
     @Override
     public String toString(){
         return Double.toString(weight);
