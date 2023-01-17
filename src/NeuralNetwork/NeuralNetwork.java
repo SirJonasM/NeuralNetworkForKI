@@ -17,7 +17,7 @@ public class NeuralNetwork {
         inputNeurons.add(in);
         return in;
     }
-    public WorkingNeuron createWorkingNeuron(){
+    public WorkingNeuron createOutputNeuron(){
         WorkingNeuron out = new WorkingNeuron();
         outPutNeurons.add(out);
         return out;

@@ -70,4 +70,13 @@ public class WorkingNeuron extends Neuron {
     public String toString() {
         return connections.toString();
     }
+
+    public double getValueRaw() {
+        double sum = 0;
+        if (hasBias) sum = biasConnection.getValue();
+        for (Connection connection : connections) {
+            sum += connection.getValue();
+        }
+        return sum;
+    }
 }
