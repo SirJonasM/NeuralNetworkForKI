@@ -27,11 +27,11 @@ public class TestClass {
             inputNeurons[i] = neuralNetwork.createInputNeuron();
         }
         for(int i = 0;i<outputs;i++){
-            outputNeurons[i] = neuralNetwork.createWorkingNeuron();
+            outputNeurons[i] = neuralNetwork.createOutputNeuron();
         }
         neuralNetwork.createHiddenLayer(10,ActivationFunction.ActivationSigmoid);
-        neuralNetwork.createHiddenLayer(11,ActivationFunction.ActivationSigmoid);
-        neuralNetwork.createHiddenLayer(12,ActivationFunction.ActivationSigmoid);
+        neuralNetwork.createHiddenLayer(11,ActivationFunction.ActivationIdentity);
+        neuralNetwork.createHiddenLayer(12,ActivationFunction.ActivationHyperbolicTanget);
 
 
         neuralNetwork.createBias();
@@ -54,7 +54,6 @@ public class TestClass {
                 if(isFalse(outputNeurons,clazzes)) {
                     fehler++;
                 }
-
                 neuralNetwork.backpropagation(clazzes, learnrate);
                 neuralNetwork.reset();
             }
@@ -94,7 +93,7 @@ public class TestClass {
     }
 
     public static int getOutput(WorkingNeuron out){
-        return (int)out.getValue();
+        return (int) out.getValue();
     }
 
 }

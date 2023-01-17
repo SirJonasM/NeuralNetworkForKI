@@ -42,6 +42,38 @@ public class Einlesen {
             }
         }
         return inputs;
+    }
+
+    public static double[][] einlesenWetter(String file) throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File(file));
+        int patterns = 0;
+        double max1 = 100.0;
+        double max2 = 100.0;
+        while (scanner.hasNext()){
+            double v1 = Double.parseDouble(scanner.next());
+            double v2 = Double.parseDouble(scanner.next());
+
+            if (max1<v1) max1 = v1;
+            if (max2<v2) max2 = v2;
+
+            patterns++;
+        }
+        double[][] inputs = new double[patterns][3];
+        scanner = new Scanner(new File(file));
+
+        int i = 0;
+        while(scanner.hasNext()){
+            double v1 = Double.parseDouble(scanner.next())/max1;
+            double v2 = Double.parseDouble(scanner.next())/max2;
+
+            inputs[i][0] = v1;
+            inputs[i][1] = v2;
+
+            double clazz = Double.parseDouble(scanner.next());
+            inputs[i][2] = clazz;
+            i++;
+        }
+        return inputs;
 
     }
 }
