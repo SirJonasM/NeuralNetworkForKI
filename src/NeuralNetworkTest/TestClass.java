@@ -1,11 +1,14 @@
 package NeuralNetworkTest;
 
+import Gui.activateScreen;
 import NeuralNetwork.*;
 import NeuralNetwork.ActivationFunction.*;
 
 import Einlesen.Einlesen;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestClass {
     private static final double learnrate = 0.0001;
@@ -57,6 +60,7 @@ public class TestClass {
             }
             if(true) System.out.printf("In der Epoche %d wurde zu %d%% richtig geraten. | (%d/%d)\n",i,(int) (100 - (fehler*100.0)/inputs.length),inputs.length-fehler,inputs.length);
             if(fehler == 0)break;
+
         }
         inputs = Einlesen.einlesen("src/Einlesen/acceleration2.txt",features,clazzes,clazzId);
         fehler = 0;
@@ -73,6 +77,10 @@ public class TestClass {
         fehlerQuote = fehlerQuote*100;
         fehlerQuote = Math.round(fehlerQuote);
         System.out.printf("Evaluation anhand von %d Mustern: %f%% richtig geraten. - (%d/%d) ",inputs.length,fehlerQuote,(inputs.length-fehler),inputs.length);
+        List<ArrayList<WorkingNeuron>> hiddenLayers = NeuralNetwork.getHiddenLayers();
+
+        //System.out.println(hiddenLayers.get(0).get(0));
+        activateScreen.execute(inputNeurons, outputNeurons);
     }
 
     private static double[] getClazzes(double[] input) {

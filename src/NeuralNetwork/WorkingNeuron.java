@@ -79,4 +79,5 @@ public class WorkingNeuron extends Neuron {
         }
         return sum;
     }
+
 }
