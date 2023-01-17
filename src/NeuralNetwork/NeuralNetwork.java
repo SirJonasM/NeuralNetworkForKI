@@ -7,12 +7,12 @@ import java.util.List;
 
 public class NeuralNetwork {
 
-    List<InputNeuron> inputNeurons =  new ArrayList<>();
-    static List<ArrayList<WorkingNeuron>> hiddenLayers = new ArrayList<>();
-    List<WorkingNeuron> outPutNeurons = new ArrayList<>();
-    List<InputNeuron> biasNeurons = new ArrayList<>();
+    public List<InputNeuron> inputNeurons =  new ArrayList<>();
+    public List<ArrayList<WorkingNeuron>> hiddenLayers = new ArrayList<>();
+    public List<WorkingNeuron> outPutNeurons = new ArrayList<>();
+    public List<InputNeuron> biasNeurons = new ArrayList<>();
 
-    public static List<ArrayList<WorkingNeuron>> getHiddenLayers() {
+    public List<ArrayList<WorkingNeuron>> getHiddenLayers() {
         return hiddenLayers;
     }
 

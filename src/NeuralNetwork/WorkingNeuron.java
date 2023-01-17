@@ -79,5 +79,8 @@ public class WorkingNeuron extends Neuron {
         }
         return sum;
     }
+    public Connection getConnection(int index){
+        return connections.get(index);
+    }
 
 }

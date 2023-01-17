@@ -38,9 +38,13 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
      */
 
     Thread myThread;
-    private JPanel MainPanel;
 
-    public Screen() {
+    NeuralNetwork neuralNetwork;
+
+    private JPanel MainPanel;
+    public Screen(NeuralNetwork neuralNetwork) {
+        this.neuralNetwork = neuralNetwork;
+
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
@@ -102,7 +106,7 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
         //g.drawString((AttributedCharacterIterator) NeuralNetwork.getInputNeurons(), 10, 10);
         //inputNeurons = activateScreen.getInputNeuronsLocal();
         //outputNeurons = activateScreen.getOutputNeuronsLocal();
-        hiddenLayers = NeuralNetwork.getHiddenLayers();
+        hiddenLayers = neuralNetwork.getHiddenLayers();
         System.out.print("\n- - - PaintComponent - - - ");
         int n = hiddenLayers.size();
         int[] neuronsPerColumn = new int[n+2];
