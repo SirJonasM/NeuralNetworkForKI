@@ -17,11 +17,11 @@ public class ArrayToImage {
             double value = data[x][y];
             if (value>0) value *= maxWert;
             else value *=minWert;
-            int red = 0;
-            int blue = 0;
-            red = (int) (128 + 127 * value);
-            blue = (int) (128 - 127 * value);
-            int green = 0;
+            value = func(value,5);
+
+            int red = (int) (128 + 127 * value);
+            int blue = (int) (128 - 127 * value);
+            int green = 100;
             Color color = new Color(red, green, blue);
             image.setRGB(x,y,color.getRGB());
         }
@@ -33,4 +33,16 @@ public class ArrayToImage {
         e.printStackTrace();
     }
 }
+
+    private static double func(double value,int factor) {
+        value = Math.atan(factor*value)*2/Math.PI;
+//        if(value>0){
+//            value +=0.5;
+//            value = Math.pow(value,factor) /Math.pow(1.5,factor);
+//            return value;
+//        }
+//        value = -value +0.5;
+//        value = Math.pow(value,factor) /Math.pow(1.5,factor);
+        return -value;
+    }
 }
