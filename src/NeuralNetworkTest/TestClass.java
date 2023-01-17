@@ -17,7 +17,6 @@ public class TestClass {
     private static final String[] clazzes = new String[]{"1","2","3"};
 
     public static void main(String[] args) throws FileNotFoundException {
-        activateScreen.main(null);
         double[][] inputs = Einlesen.einlesen("src/Einlesen/acceleration.txt",features,clazzes,clazzId);
         NeuralNetwork neuralNetwork = new NeuralNetwork();
         InputNeuron[] inputNeurons = new InputNeuron[features];
@@ -76,6 +75,7 @@ public class TestClass {
         fehlerQuote = fehlerQuote*100;
         fehlerQuote = Math.round(fehlerQuote);
         System.out.printf("Evaluation anhand von %d Mustern: %f%% richtig geraten. - (%d/%d) ",inputs.length,fehlerQuote,(inputs.length-fehler),inputs.length);
+        activateScreen.execute(inputNeurons, outputNeurons);
     }
 
     private static double[] getClazzes(double[] input) {

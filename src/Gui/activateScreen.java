@@ -1,10 +1,16 @@
 package Gui;
 
+import NeuralNetwork.InputNeuron;
+import NeuralNetwork.WorkingNeuron;
+
 import javax.swing.*;
 
 public class activateScreen {
-
-    public static void main(String[] args) {
+    static InputNeuron[] inputNeuronsLocal;
+    static WorkingNeuron[] outputNeuronsLocal;
+    public static void execute(InputNeuron[] inputNeurons, WorkingNeuron[] outputNeurons) {
+        inputNeuronsLocal = inputNeurons;
+        outputNeuronsLocal = outputNeurons;
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
@@ -19,5 +25,12 @@ public class activateScreen {
         window.setVisible(true);
 
         screen.startMyThread();
+    }
+
+    public static InputNeuron[] getInputNeuronsLocal() {
+        return inputNeuronsLocal;
+    }
+    public static WorkingNeuron[] getOutputNeuronsLocal() {
+        return outputNeuronsLocal;
     }
 }

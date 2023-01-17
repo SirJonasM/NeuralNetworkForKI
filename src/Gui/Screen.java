@@ -9,7 +9,10 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.AttributedCharacterIterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import NeuralNetwork.*;
 
 public class Screen extends JPanel implements Runnable, KeyListener, MouseListener {
 
@@ -41,7 +44,9 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
 
     @Override
     public void run() {
-        while (myThread != null) {
+
+        //while (myThread != null) {
+            //update();
             /*
 
 
@@ -68,7 +73,7 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
             }
 
             */
-        }
+        //}
     }
 
     public void update() {
@@ -88,14 +93,18 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
         //drawNeurons(10, 200, g);
         //drawNeurons(7, 300, g);
         //g.drawString((AttributedCharacterIterator) NeuralNetwork.getInputNeurons(), 10, 10);
-        int[] neuronsPerColumn = {10, 7, 5, 15, 3, 1};
+        InputNeuron[] inputNeurons = activateScreen.getInputNeuronsLocal();
+        WorkingNeuron[] outputNeurons = activateScreen.getOutputNeuronsLocal();
+        List<ArrayList<WorkingNeuron>> hiddenLayers = NeuralNetwork.getHiddenLayers();
+        System.out.print("\n- - - PaintComponent - - - ");
+        int[] neuronsPerColumn = {inputNeurons.length, outputNeurons.length};
         drawAllNeurons(neuronsPerColumn, g);
     }
 
     public void drawAllNeurons(int[] neuronsPerColumn, Graphics g){
-        int xPos = (screenWidth)/neuronsPerColumn.length;
+
         for(int i = 0; i<neuronsPerColumn.length; i++){
-            drawNeurons(neuronsPerColumn[i], (xPos*i) + xPos, g);
+            drawNeurons(neuronsPerColumn[i], 200 + i*(200), g);
         }
     }
 
@@ -103,7 +112,7 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
         if(n == 0){
             return;
         }
-        int yPos = (screenHeight)/n;
+        int yPos = (screenHeight)/(n+1);
 
         for(int i = 0; i<n; i++){
             g.drawOval(xPos, yPos + (i*yPos), 10, 10);
