@@ -78,8 +78,6 @@ public class TestClass {
         fehlerQuote = Math.round(fehlerQuote);
         System.out.printf("Evaluation anhand von %d Mustern: %f%% richtig geraten. - (%d/%d) ",inputs.length,fehlerQuote,(inputs.length-fehler),inputs.length);
         List<ArrayList<WorkingNeuron>> hiddenLayers = neuralNetwork.getHiddenLayers();
-
-        //System.out.println(hiddenLayers.get(0).get(0));
         activateScreen.execute(neuralNetwork,inputNeurons, outputNeurons);
     }
 

@@ -27,7 +27,7 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
 
     List<Integer> neuronPos = new ArrayList<>();
     int length;
-
+    int Column = -1;
     static int[] color = { 0, 0, 255 };
 
     /*
@@ -98,7 +98,7 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.black);
-        Random rand = new Random();
+        //Random rand = new Random();
         //Graphics g2 = (Graphics2D) g;
         //g.drawOval(10, 10, 10, 10);
         //drawNeurons(10, 200, g);
@@ -107,6 +107,9 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
         //inputNeurons = activateScreen.getInputNeuronsLocal();
         //outputNeurons = activateScreen.getOutputNeuronsLocal();
         hiddenLayers = neuralNetwork.getHiddenLayers();
+        //System.out.println(hiddenLayers.get(0).get(0));
+        System.out.println(hiddenLayers.get(0).get(0).getConnection(0));
+
         System.out.print("\n- - - PaintComponent - - - ");
         int n = hiddenLayers.size();
         int[] neuronsPerColumn = new int[n+2];
@@ -141,16 +144,20 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
                 drawOutputConnections(g);
             }
              */
+            Column++;
+
         }
     }
 
     public void drawNeurons(int n, int xPos, Graphics g, int status, int xPosFactor){
+        //n -> Anzahl Neuronen in 1 HiddenLayer
         if(n == 0){
             return;
         }
-        g.setColor(Color.RED);
+
         int yPos = (screenHeight)/(n+1);
         for(int i = 0; i<n; i++){
+            g.setColor(Color.RED);
             g.fillOval(xPos, yPos + (i*yPos), neuronSize, neuronSize);
             if(status == 2){
                 drawOutputConnections(g, xPos, yPos+(i*yPos), xPos - xPosFactor);
@@ -169,8 +176,9 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
 
     public void drawHiddenConnections(Graphics g, int xPos, int yPos, int xPosPrev, int neuronID){
         for(int i = 0; i<length; i++){
-
-            //setColor(hiddenLayers.get(neuronID).get(i));
+            System.out.println(hiddenLayers.get(Column).get(neuronID).getConnection(i));
+            setColor(hiddenLayers.get(Column).get(neuronID).getConnection(i));
+            System.out.println("Column: " + Column + " neuronID: " + neuronID + " i: " + i);
             g.setColor(new Color(color[0], color[1], color[2]));
             g.drawLine(xPos+neuronSize/2, yPos+neuronSize/2, xPosPrev+neuronSize/2, neuronPos.get(i)+neuronSize/2);
         }
