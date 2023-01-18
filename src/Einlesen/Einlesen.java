@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Einlesen {
+    public static double[] maximas;
+    public static boolean maximasSet = false;
+
     public static double[][] einlesen(String s,int attributes,String[] clazzes, int clazzId) throws FileNotFoundException {
         Scanner scanner = new Scanner(new File(s));
         Map<String,Integer> clazzesMap = new HashMap<>();
@@ -12,33 +15,38 @@ public class Einlesen {
             clazzesMap.put(clazzes[i],i);
         }
         int muster = 0;
-        double[] maximas = new double[attributes];
+        if(!maximasSet)
+        maximas = new double[attributes];
 
         while (scanner.hasNext()){
             for(int i = 0;i<attributes+1;i++) {
-                double value = Double.parseDouble(scanner.next());
                 if (i == clazzId) {
+                    scanner.next();
                     continue;
                 }
+                double value = Double.parseDouble(scanner.next());
+                if(maximasSet) continue;
                 if (maximas[i] < value) maximas[i] = value;
             }
             muster++;
         }
+        maximasSet = true;
 
         double[][] inputs = new double[muster][attributes+clazzes.length];
         scanner = new Scanner(new File(s));
         for(int m = 0;m<muster;m++){
             for(int i = 0;i<attributes+1;i++){
                 if (i == clazzId){
-                    int clazz = clazzesMap.get(scanner.next());
+                    String st = scanner.next();
+                    int clazz = clazzesMap.get(st);
                     for(int n = 0;n<clazzes.length;n++){
                         if(n == clazz) inputs[m][i+n] = 1;
-                        else inputs[m][n] = 0;
+                        else inputs[m][n+i] = 0;
                     }
                     continue;
                 }
                 double value = Double.parseDouble(scanner.next());
-                inputs[m][i] = value;
+                inputs[m][i] = value/maximas[1];
             }
         }
         return inputs;

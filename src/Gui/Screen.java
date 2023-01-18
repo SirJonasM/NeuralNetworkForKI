@@ -12,6 +12,7 @@ import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import NeuralNetwork.*;
 import NeuralNetworkTest.TestClass;
 
@@ -29,23 +30,22 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
     List<Integer> neuronPos = new ArrayList<>();
     int length;
     int Column = -1;
-    static int[] color = { 0, 0, 255 };
-
+    static int[] color = {0, 0, 255};
 
     public static double f = 0;
     public static int time = 0;
 
-    int FPS = 5;
+    double FPS = 5;
 
     Thread myThread;
 
-    NeuralNetwork neuralNetwork;
+    static NeuralNetwork neuralNetwork;
 
     private JPanel MainPanel;
+
     //public Screen(NeuralNetwork neuralNetwork) {
     public Screen() {
-        this.neuralNetwork = neuralNetwork;
-
+        neuralNetwork = activateScreen.neuralNetwork;
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
@@ -64,11 +64,8 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
         while (myThread != null) {
             update();
 
-
-
-            double drawInterval = 1000000000 / FPS; // 0.01666 seconds
+            double drawInterval = 1_000_000_000 / FPS; // 0.01666 seconds
             double nextDrawTime = System.nanoTime() + drawInterval;
-
 
             update();
             repaint();
@@ -112,21 +109,21 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
         //System.out.println(hiddenLayers.get(0).get(0).getConnection(0));
 
         //System.out.print("\n- - - PaintComponent - - - ");
-        int n = TestClass.getNeuralNetwork().hiddenLayers.size();
+        int n = neuralNetwork.hiddenLayers.size();
         //int n = hiddenLayers.size();
-        int[] neuronsPerColumn = new int[n+2];
-        neuronsPerColumn[0] = TestClass.getInputNeurons().length;
+        int[] neuronsPerColumn = new int[n + 2];
+        neuronsPerColumn[0] = neuralNetwork.getInputNeurons().size();
         //neuronsPerColumn[0] = inputNeurons.length;
-        for(int i = 1; i<n+1; i++){
+        for (int i = 1; i < n + 1; i++) {
             //neuronsPerColumn[i] = hiddenLayers.get(i-1).size();
-            neuronsPerColumn[i] = TestClass.getNeuralNetwork().hiddenLayers.get(i-1).size();
+            neuronsPerColumn[i] = neuralNetwork.hiddenLayers.get(i - 1).size();
         }
         //neuronsPerColumn[n+1] = outputNeurons.length;
-        neuronsPerColumn[n+1] = TestClass.getOutputNeurons().length;
+        neuronsPerColumn[n + 1] = neuralNetwork.getOutputNeurons().size();
         drawAllNeurons(neuronsPerColumn, g);
     }
 
-    public void drawAllNeurons(int[] neuronsPerColumn, Graphics g){
+    public void drawAllNeurons(int[] neuronsPerColumn, Graphics g) {
         int status = 0;
         /*
         status:
@@ -134,14 +131,15 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
         1 = drawHiddenConnections
         2 = drawOutputConnections
          */
-        int xPos = screenWidth/(neuronsPerColumn.length+1);
-        for(int i = 0; i<neuronsPerColumn.length; i++){
-            if(i == 1){
+        int xPos = screenWidth / (neuronsPerColumn.length + 1);
+        for (int i = 0; i < neuronsPerColumn.length; i++) {
+            if (i == 1) {
                 status = 1;
-            } if (i == neuronsPerColumn.length-1) {
+            }
+            if (i == neuronsPerColumn.length - 1) {
                 status = 2;
             }
-            drawNeurons(neuronsPerColumn[i], xPos + (i*xPos), g, status, xPos);
+            drawNeurons(neuronsPerColumn[i], xPos + (i * xPos), g, status, xPos);
             /*
             if(i>0 && i<neuronsPerColumn.length-1){
                 drawHiddenConnections(g);
@@ -155,70 +153,67 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
         Column = -1;
     }
 
-    public void drawNeurons(int n, int xPos, Graphics g, int status, int xPosFactor){
+    public void drawNeurons(int n, int xPos, Graphics g, int status, int xPosFactor) {
         //n -> Anzahl Neuronen in 1 HiddenLayer
-        if(n == 0){
+        if (n == 0) {
             return;
         }
 
-        int yPos = (screenHeight)/(n+1);
-        for(int i = 0; i<n; i++){
+        int yPos = (screenHeight) / (n + 1);
+        for (int i = 0; i < n; i++) {
             g.setColor(Color.WHITE);
-            g.fillOval(xPos, yPos + (i*yPos), neuronSize, neuronSize);
-            if(status == 2){
-                drawOutputConnections(g, xPos, yPos+(i*yPos), xPos - xPosFactor, i);
-            }
-            else if(status == 1){
-                drawHiddenConnections(g, xPos, yPos+(i*yPos), xPos - xPosFactor, i);
+            g.fillOval(xPos, yPos + (i * yPos), neuronSize, neuronSize);
+            if (status == 2) {
+                drawOutputConnections(g, xPos, yPos + (i * yPos), xPos - xPosFactor, i);
+            } else if (status == 1) {
+                drawHiddenConnections(g, xPos, yPos + (i * yPos), xPos - xPosFactor, i);
             }
         }
         neuronPos.clear();
-        for(int i = 0; i<n; i++){
+        for (int i = 0; i < n; i++) {
             length = n;
-            neuronPos.add(yPos + (i*yPos));
+            neuronPos.add(yPos + (i * yPos));
         }
 
     }
 
-    public void drawHiddenConnections(Graphics g, int xPos, int yPos, int xPosPrev, int neuronID){
-        for(int i = 0; i<length; i++){
-            double weight = TestClass.getNeuralNetwork().hiddenLayers.get(Column).get(neuronID).getConnection(i);
+    public void drawHiddenConnections(Graphics g, int xPos, int yPos, int xPosPrev, int neuronID) {
+        for (int i = 0; i < length; i++) {
+            double weight = neuralNetwork.hiddenLayers.get(Column).get(neuronID).getConnection(i);
             //System.out.println("Column: " + Column + " neuronID: " + neuronID + " i: " + i);
             //System.out.println(weight);
             //System.out.println("HiddenLayerNeuron Weight: "+weight);
             setColor(weight);
 
             g.setColor(new Color(color[0], color[1], color[2]));
-            g.drawLine(xPos+neuronSize/2, yPos+neuronSize/2, xPosPrev+neuronSize/2, neuronPos.get(i)+neuronSize/2);
+            g.drawLine(xPos + neuronSize / 2, yPos + neuronSize / 2, xPosPrev + neuronSize / 2, neuronPos.get(i) + neuronSize / 2);
         }
     }
 
-    public void drawOutputConnections(Graphics g, int xPos, int yPos, int xPosPrev, int neuronID){
-        for(int i = 0; i<length; i++){
-            double weight = TestClass.getOutputNeurons()[neuronID].getConnection(i);
+    public void drawOutputConnections(Graphics g, int xPos, int yPos, int xPosPrev, int neuronID) {
+        for (int i = 0; i < length; i++) {
+            double weight = neuralNetwork.getOutputNeurons().get(neuronID).getConnection(i);
             //System.out.println("OutputNeuron Weight: "+weight);
             setColor(weight);
             g.setColor(new Color(color[0], color[1], color[2]));
-            g.drawLine(xPos+neuronSize/2, yPos+neuronSize/2, xPosPrev+neuronSize/2, neuronPos.get(i)+neuronSize/2);
+            g.drawLine(xPos + neuronSize / 2, yPos + neuronSize / 2, xPosPrev + neuronSize / 2, neuronPos.get(i) + neuronSize / 2);
         }
     }
-
-
 
 
     public static void setColor(double value) {
         double c = value;
         c *= 0.5;
         c += 0.5;
-        if(c<0){
+        if (c < 0) {
             c = 0;
-        }else if(c>=1){
+        } else if (c >= 1) {
             c = 1;
         }
-        c = c*255;
+        c = c * 255;
         //System.out.println("c: --> " + c);
         color[0] = (int) c;
-        color[2] = 255 - (int)c;
+        color[2] = 255 - (int) c;
     }
 
     @Override

@@ -7,6 +7,11 @@ import NeuralNetwork.WorkingNeuron;
 import javax.swing.*;
 
 public class activateScreen extends Thread {
+    public static NeuralNetwork neuralNetwork;
+
+    public activateScreen(NeuralNetwork neuralNetwork){
+        activateScreen.neuralNetwork = neuralNetwork;
+    }
 
     public void run(){
         execute();

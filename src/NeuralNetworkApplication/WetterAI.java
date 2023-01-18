@@ -2,6 +2,7 @@ package NeuralNetworkApplication;
 
 import Einlesen.Einlesen;
 import Gui.ArrayToImage;
+import Gui.activateScreen;
 import NeuralNetwork.*;
 import NeuralNetwork.ActivationFunction.ActivationFunction;
 
@@ -25,11 +26,11 @@ public class WetterAI {
         in2 = neuralNetwork.createInputNeuron();
 
 //        Adding x Hidden Neurons in one Hidden Layer
-        int x = 10;
+        int x = 2;
         neuralNetwork.createHiddenLayer(x,ActivationFunction.ActivationSigmoid);
 //        you can add another Hidden Layer if u wish with
-        int y = 100;
-        neuralNetwork.createHiddenLayer(y,ActivationFunction.ActivationSigmoid);
+        int y = 2;
+        neuralNetwork.createHiddenLayer(y,ActivationFunction.ActivationHyperbolicTanget);
 
 
 //        Adding a Output Neuron
@@ -79,23 +80,25 @@ public class WetterAI {
             }
         }
         System.out.println("tested: " + fails);
-        fillFunction(800,800);
-        for(double[] i : function){
-            for(double z : i){
-                System.out.print(Math.round(z*1000.0)/1000.0 +" ");
-            }
-            System.out.println();
-        }
+        fillFunction(100,100);
+//        for(double[] i : function){
+//            for(double z : i){
+//                System.out.print(Math.round(z*1000.0)/1000.0 +" ");
+//            }
+//            System.out.println();
+//        }
         neuralNetwork.reset();
-        double minWert = 0;
-        double maxWert = 0;
+        double minValue = 0;
+        double maxValue = 0;
         for(double[] i : function){
             for (double z : i){
-                if (minWert>z) minWert = z;
-                if(maxWert<z) maxWert = z;
+                if (minValue>z) minValue = z;
+                if(maxValue<z) maxValue = z;
             }
         }
-        ArrayToImage.createImage(function,1/maxWert,-1/minWert);
+        ArrayToImage.createImage(function,1/maxValue,1/minValue);
+        activateScreen s = new activateScreen(neuralNetwork);
+        s.start();
     }
 
     public static void fillFunction(double x, double y){
@@ -105,7 +108,6 @@ public class WetterAI {
                 neuralNetwork.reset();
                 in1.setValue(i/x);
                 in2.setValue(z/y);
-
                 function[function.length-z-1][i] =  out1.getValueRaw();
             }
         }

@@ -1,5 +1,6 @@
 package NeuralNetwork;
 
+import Gui.ArrayToImage;
 import NeuralNetwork.ActivationFunction.ActivationFunction;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class NeuralNetwork {
 
     }
     public void setActivationFunctionOutput(ActivationFunction activationFunction){
-        outPutNeurons.forEach(n -> n.setActivationFunction(activationFunction));
+        outPutNeurons.forEach(neuron -> neuron.setActivationFunction(activationFunction));
     }
     public void createBias(){
         for(int i = 0; i<hiddenLayers.size()+1;i++) {
@@ -49,36 +50,36 @@ public class NeuralNetwork {
         if(hiddenLayers.size() == 0){
             for(WorkingNeuron out : outPutNeurons){
                 for(InputNeuron in : inputNeurons){
-                    out.addConnection(new Connection(in,1));
+                    out.addConnection(new Connection(in,0));
                 }
             }
         }else if (hiddenLayers.size() == 1){
             for(WorkingNeuron out : outPutNeurons){
                 for(WorkingNeuron hidden : hiddenLayers.get(0)){
-                    out.addConnection(new Connection(hidden,1));
+                    out.addConnection(new Connection(hidden,0));
                 }
             }
             for(InputNeuron in : inputNeurons){
                 for(WorkingNeuron hidden : hiddenLayers.get(0)){
-                    hidden.addConnection(new Connection(in,1));
+                    hidden.addConnection(new Connection(in,0));
                 }
             }
         }else{
             for(WorkingNeuron out : outPutNeurons){
                 for(WorkingNeuron hidden : hiddenLayers.get(hiddenLayers.size()-1)){
-                    out.addConnection(new Connection(hidden,1));
+                    out.addConnection(new Connection(hidden,0));
                 }
             }
             for(int i = 0;i<hiddenLayers.size()-1;i++) {
                 for (WorkingNeuron hidden1 : hiddenLayers.get(i)) {
                     for (WorkingNeuron hidden2 : hiddenLayers.get(i+1)) {
-                        hidden2.addConnection(new Connection(hidden1, 1));
+                        hidden2.addConnection(new Connection(hidden1, 0));
                     }
                 }
             }
             for(InputNeuron in : inputNeurons){
                 for(WorkingNeuron hidden : hiddenLayers.get(0)){
-                    hidden.addConnection(new Connection(in,1));
+                    hidden.addConnection(new Connection(in,0));
                 }
             }
         }
@@ -139,6 +140,10 @@ public class NeuralNetwork {
     }
 
     public void createFullConnections(boolean random){
+        if (!random) {
+            createFullConnections();
+            return;
+        }
         addBias();
         if(hiddenLayers.size() == 0){
             for(WorkingNeuron out : outPutNeurons){
@@ -233,5 +238,13 @@ public class NeuralNetwork {
             text.append(biasNeuron);
         }
         return text.toString();
+    }
+
+    public List<WorkingNeuron> getOutputNeurons() {
+        return outPutNeurons;
+    }
+
+    public ArrayList<InputNeuron> getInputNeurons() {
+        return (ArrayList<InputNeuron>) inputNeurons;
     }
 }

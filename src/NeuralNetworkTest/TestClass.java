@@ -22,16 +22,6 @@ public class TestClass {
     static InputNeuron[] inputNeurons = new InputNeuron[features];
     static WorkingNeuron[] outputNeurons = new WorkingNeuron[outputs];
 
-    public static NeuralNetwork getNeuralNetwork(){
-        return neuralNetwork;
-    }
-    public static InputNeuron[] getInputNeurons(){
-        return inputNeurons;
-    }
-    public static WorkingNeuron[] getOutputNeurons(){
-        return outputNeurons;
-    }
-
     public static void main(String[] args) throws FileNotFoundException {
         double[][] inputs = Einlesen.einlesen("src/Einlesen/acceleration.txt",features,clazzes,clazzId);
 
@@ -98,7 +88,7 @@ public class TestClass {
         fehlerQuote = Math.round(fehlerQuote);
         System.out.printf("Evaluation anhand von %d Mustern: %f%% richtig geraten. - (%d/%d) ",inputs.length,fehlerQuote,(inputs.length-fehler),inputs.length);
         List<ArrayList<WorkingNeuron>> hiddenLayers = neuralNetwork.getHiddenLayers();
-        activateScreen s = new activateScreen();
+        activateScreen s = new activateScreen(neuralNetwork);
         s.start();
         //activateScreen.execute(neuralNetwork, inputNeurons, outputNeurons);
     }
