@@ -18,11 +18,23 @@ public class TestClass {
     private static final int outputs = 3;
     private static final String[] clazzes = new String[]{"1","2","3"};
 
+    static NeuralNetwork neuralNetwork = new NeuralNetwork();
+    static InputNeuron[] inputNeurons = new InputNeuron[features];
+    static WorkingNeuron[] outputNeurons = new WorkingNeuron[outputs];
+
+    public static NeuralNetwork getNeuralNetwork(){
+        return neuralNetwork;
+    }
+    public static InputNeuron[] getInputNeurons(){
+        return inputNeurons;
+    }
+    public static WorkingNeuron[] getOutputNeurons(){
+        return outputNeurons;
+    }
+
     public static void main(String[] args) throws FileNotFoundException {
         double[][] inputs = Einlesen.einlesen("src/Einlesen/acceleration.txt",features,clazzes,clazzId);
-        NeuralNetwork neuralNetwork = new NeuralNetwork();
-        InputNeuron[] inputNeurons = new InputNeuron[features];
-        WorkingNeuron[] outputNeurons = new WorkingNeuron[outputs];
+
 
         for(int i = 0;i<features;i++){
             inputNeurons[i] = neuralNetwork.createInputNeuron();
@@ -34,10 +46,18 @@ public class TestClass {
         neuralNetwork.createHiddenLayer(11,ActivationFunction.ActivationIdentity);
         neuralNetwork.createHiddenLayer(12,ActivationFunction.ActivationHyperbolicTanget);
 
-
         neuralNetwork.createBias();
         neuralNetwork.createFullConnections(true);
         neuralNetwork.setActivationFunctionOutput(activationFunction);
+
+        //*******************************************************************
+        //activateScreen.execute(neuralNetwork, inputNeurons, outputNeurons);
+        //activateScreen.execute();
+        //activateScreen s1 = new activateScreen();
+        //activateScreen s2 = new activateScreen();
+        //s1.start();
+        //s2.start();
+        //*******************************************************************
 
         int fehler;
         int epochen = 5;
@@ -78,7 +98,9 @@ public class TestClass {
         fehlerQuote = Math.round(fehlerQuote);
         System.out.printf("Evaluation anhand von %d Mustern: %f%% richtig geraten. - (%d/%d) ",inputs.length,fehlerQuote,(inputs.length-fehler),inputs.length);
         List<ArrayList<WorkingNeuron>> hiddenLayers = neuralNetwork.getHiddenLayers();
-        activateScreen.execute(neuralNetwork,inputNeurons, outputNeurons);
+        activateScreen s = new activateScreen();
+        s.start();
+        //activateScreen.execute(neuralNetwork, inputNeurons, outputNeurons);
     }
 
     private static double[] getClazzes(double[] input) {
