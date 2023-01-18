@@ -6,20 +6,20 @@ import NeuralNetwork.WorkingNeuron;
 
 import javax.swing.*;
 
-public class activateScreen {
-    static InputNeuron[] inputNeuronsLocal;
-    static WorkingNeuron[] outputNeuronsLocal;
-    public static void execute(NeuralNetwork neuralNetwork,InputNeuron[] inputNeurons, WorkingNeuron[] outputNeurons) {
-        System.out.println(neuralNetwork.inputNeurons.get(1));
-        inputNeuronsLocal = inputNeurons;
-        outputNeuronsLocal = outputNeurons;
+public class activateScreen extends Thread {
+
+    public void run(){
+        execute();
+    }
+    public static void execute() {
+
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setTitle("Neuronales Netz");
         window.setSize(800, 500);
 
-        Screen screen = new Screen(neuralNetwork);
+        Screen screen = new Screen();
         window.add(screen);
 
         window.pack();
@@ -27,12 +27,5 @@ public class activateScreen {
         window.setVisible(true);
 
         screen.startMyThread();
-    }
-
-    public static InputNeuron[] getInputNeuronsLocal() {
-        return inputNeuronsLocal;
-    }
-    public static WorkingNeuron[] getOutputNeuronsLocal() {
-        return outputNeuronsLocal;
     }
 }
