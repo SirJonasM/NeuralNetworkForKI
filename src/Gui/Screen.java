@@ -121,7 +121,7 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
         //neuronsPerColumn[n+1] = outputNeurons.length;
         neuronsPerColumn[n + 1] = neuralNetwork.getOutputNeurons().size();
         drawAllNeurons(neuronsPerColumn, g);
-        //setScreenInformation(g);
+        setScreenInformation(g);
     }
 
     private void setScreenInformation(Graphics g) {
@@ -129,14 +129,30 @@ public class Screen extends JPanel implements Runnable, KeyListener, MouseListen
         //g.setColor(new Color(color[0], color[1], color[2]));
         //g.drawString("Scale: ", screenWidth-200, 50);
         //g.drawLine(screenWidth-200, 75, screenWidth-150, 75);
-        g.drawString("", screenWidth-200, 300);
-        int n = (screenWidth%2==0) ? screenWidth/2 : (screenWidth-1)/2;
+        //g.drawString("", screenWidth-200, 300);
 
+        int n = (screenHeight%2==0) ? screenHeight/2 : (screenHeight-1)/2;
+        //n = screenHeight/2;
+        /*
         for(int i = n; i>=0; i--){
-            setColor(i /n);
+            setColor(i);
             g.setColor(new Color(color[0], color[1], color[2]));
             g.fillRect(screenWidth-200, screenHeight + screenHeight/4-i, 20, 1);
         }
+
+         */
+        for(int i = 0; i<n; i++){
+            setColor((double)i/(double)n);
+            g.setColor(new Color(color[0], color[1], color[2]));
+            g.fillRect(screenWidth-150, n + n/2 - i, 20, 1);
+        }
+        int margin = 5;
+        g.setColor(Color.white);
+        g.drawString(" 1.0", screenWidth-110, n/2 + margin);
+        g.drawString(" 0.5", screenWidth-110, 3*n/4 + margin);
+        g.drawString(" 0.0", screenWidth-110, 4*n/4 + margin);
+        g.drawString("-0.5", screenWidth-110, 5*n/4 + margin);
+        g.drawString("-1.0", screenWidth-110, n/2+n + margin);
     }
 
     public void drawAllNeurons(int[] neuronsPerColumn, Graphics g) {
