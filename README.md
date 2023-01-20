@@ -1,26 +1,31 @@
 # NeuralNetworkForKI
 
-WetterAI ist die Abgabe,
+WetterAI ist die Abgabe, in ihr befindet sich die Main-Methode.
 
-Sie erstellt ein Neuronales Netz (NN) mit 2 Hidden Layers die jeweis 2 Neuronen enthalten,
-Das erste Layer enthält eine Hyperbolic Tangent Aktivierungsfunktion das zweite Layer eine Sigmoidfunktion.
+Sie erstellt ein neuronales Netz mit 2 Hidden Layers, die jeweils 2 Neuronen enthalten.
+Layer 1 enthält eine Hyperbolic Tangent Aktivierungsfunktion, Layer 2 eine Sigmoidfunktion.
 
-Das Netz lernt mithilfe eines backpropagation ALgorithmuses. Dieser enthält zudem ein Momentum, damit es schneller lernt.
+Das Netz lernt mithilfe eines backpropagation-Algorithmus. Dieser arbeitet zudem mit einem Momentum,
+um schneller zu lernen.
 
-Es gibt eine Wetter1.txt und Wetter2.txt Datei die jeweils Punkte (Muster) enthalten.
-Wetter1.txt wird zum trainieren benutzt, Wetter2.txt zum evaluieren
+Es gibt eine Wetter1.txt und Wetter2.txt Datei, in welchen jeweils Punkte (Muster) gespeichert sind.
+Wetter1.txt wird benutzt, um das Netz zu trainieren, Wetter2.txt wird zur Evaluation genutzt.
 
-Nach der Evaluierung wird ein Bild erzeugt, welche die Ergebnisse des NN veranschaulicht dabei steht ein rötliches Feld dafür, dass das Netz an diesem Punkt
-eine 1 vorhergesagt hätte und ein blaues Feld eine 0. Die Auflösung ist anpassbar über fillFunction(width, hight).
-Das Bild ist meist sehr scharf wenn ein "gutes" NN gelernt wurde, also z.B. wenn der Test gut ausgefallen ist.
-Ist der Test schlecht ausgefallen ist das Bild sehr "unscharf".
+Nach der Evaluierung wird ein Bild erzeugt, welches die Ergebnisse des neuronalen Netzes veranschaulichen soll.
+Im Bild wird durch die Farben Rot und Blau dargestellt, ob das Netz eine 1 oder eine 0
+an dem jeweiligen Punkt vorhersagt.
+Rot steht hierbei für eine 1, Blau für eine 0.
 
-Zudem wird dieses Bild mit Einsen und Nullen auch die Konsole geschrieben.
+Die Auflösung ist anpassbar über die Methode fillFunction(width, height).
+Das Bild ist meist sehr scharf, wenn ein "gutes" neuronales Netz gelernt wurde (wenn der Test gut ausgefallen ist). 
+Andernfalls kann das Bild sehr "unscharf" sein.
 
-Am Ende wird noch eine Fenster geöffnet, welches das Netz anzeigt dieses ist eigentlich selbsterklärend.
+Zudem wird dieses Bild mit Einsen und Nullen auch in die Konsole geschrieben.
 
-Man kann die Felder (epochen, learningRate) der Klasse WetterAI anpassen und auch die Anzahl der Hidden Layers und wie viele Neuronen diese beinhalten sollen.
+Zusätzlich wird in einem neuen Fenster das trainierte neuronale Netz angezeigt. Die Farbe
+repräsentiert hierbei das Gewicht der Verbindungen. (-1 -> blau; +1 -> rot)
 
+Anpassbar sind die Felder (epochen, learningRate) der Klasse WetterAI. Zudem kann man die Anzahl der hiddenLayers
+frei wählen sowie die jeweilige Anzahl von Neuronen pro Layer.
 
-
-
+Gruppenmitglieder: Jonas Möwes, Gurwinder Singh, Abdualah Al Rade, Leon Ostgathe
