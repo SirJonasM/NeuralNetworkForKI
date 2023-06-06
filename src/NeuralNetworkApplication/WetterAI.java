@@ -7,6 +7,7 @@ import NeuralNetwork.*;
 import NeuralNetwork.ActivationFunction.ActivationFunction;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 
 public class WetterAI {
     static double[][] function;
@@ -26,11 +27,14 @@ public class WetterAI {
         in2 = neuralNetwork.createInputNeuron();
 
 //        Adding x Hidden Neurons in one Hidden Layer
-        int x = 2;
+        int x = 100;
+        neuralNetwork.createHiddenLayer(x,ActivationFunction.ActivationHyperbolicTanget);
+        x = 100;
         neuralNetwork.createHiddenLayer(x,ActivationFunction.ActivationSigmoid);
 //        you can add another Hidden Layer if u wish with
-        int y = 2;
-        neuralNetwork.createHiddenLayer(y,ActivationFunction.ActivationHyperbolicTanget);
+//        x = 2;
+//        neuralNetwork.createHiddenLayer(x,ActivationFunction.ActivationIdentity);
+
 
 
 //        Adding a Output Neuron
@@ -54,15 +58,15 @@ public class WetterAI {
 
                 if(o1 != input[2]){
                     fails++;
-                }
 
+                }
                 neuralNetwork.backpropagation(new double[]{input[2]},learnRate);
                 neuralNetwork.reset();
             }
             if(fails == 0) break;
-            System.out.println(fails);
+            System.out.println("Epoche: " + epoche + " Fehler: " + fails);
         }
-        inputs = Einlesen.einlesenWetter("src/Einlesen/wetter.txt");
+        inputs = Einlesen.einlesenWetter("src/Einlesen/wetter2.txt");
 
         //Test:
         int fails = 0;
@@ -79,14 +83,8 @@ public class WetterAI {
                 fails++;
             }
         }
-        System.out.println("tested: " + fails);
-        fillFunction(100,100);
-//        for(double[] i : function){
-//            for(double z : i){
-//                System.out.print(Math.round(z*1000.0)/1000.0 +" ");
-//            }
-//            System.out.println();
-//        }
+        System.out.println("Tested: " + fails);
+        fillFunction(1000,1000,true);
         neuralNetwork.reset();
         double minValue = 0;
         double maxValue = 0;
@@ -97,18 +95,26 @@ public class WetterAI {
             }
         }
         ArrayToImage.createImage(function,1/maxValue,1/minValue);
+        System.out.println("-------- Bild erzeugt --------");
         activateScreen s = new activateScreen(neuralNetwork);
         s.start();
+        fillFunction(100,100,false);
+        for (double[] i:function) {
+            Arrays.stream(i).forEach(d -> System.out.print((int)d));
+            System.out.println();
+
+        }
     }
 
-    public static void fillFunction(double x, double y){
+    public static void fillFunction(double x, double y,boolean raw){
         function = new double[(int) y][(int) x];
         for(int i = 0;i<x;i++) {
             for (int z = 0; z < x; z++) {
                 neuralNetwork.reset();
                 in1.setValue(i/x);
                 in2.setValue(z/y);
-                function[function.length-z-1][i] =  out1.getValueRaw();
+                function[function.length-z-1][i] = raw ? out1.getValueRaw() :out1.getValue();
+
             }
         }
     }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkingNeuron extends Neuron {
-    private List<Connection> connections = new ArrayList<>();
+    private final List<Connection> connections = new ArrayList<>();
     private double smallDelta;
     private double value = 0;
     private boolean valueClean = false;
@@ -52,7 +52,7 @@ public class WorkingNeuron extends Neuron {
     public void deltaLearning(double learnRate) {
         double bigDeltaFactor = activationFunction.derivative(getValue())* learnRate * smallDelta;
         for(int i = 0; i<connections.size();i++){
-            double bigDelta = bigDeltaFactor  *connections.get(i).getNeuron().getValue();
+            double bigDelta = bigDeltaFactor  * connections.get(i).getNeuron().getValue();
             connections.get(i).updateWeight(bigDelta);
         }
         if(hasBias) biasConnection.updateWeight(bigDeltaFactor);

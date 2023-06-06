@@ -1,5 +1,4 @@
 package Gui;
-import org.w3c.dom.css.RGBColor;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -16,7 +15,7 @@ public class ArrayToImage {
         for (int y = 0; y < height; y++) {
             double value = data[x][y];
 
-            value = func(value,10);
+            value = func(value,100);
 
             int red = (int) (255 * value);
             int blue = (int) (255 * (1-value));
@@ -53,19 +52,6 @@ public class ArrayToImage {
                 value2 = func(value2,10);
 
                 value3 = func(value3,10);
-
-//                if (value1> value2 && value1 >value3) {
-//                    value2 = 0;
-//                    value3 = 0;
-//                }
-//                else if (value2> value1 && value2 >value3) {
-//                    value1 = 0;
-//                    value3 = 0;
-//                }
-//                else {
-//                    value1 = 0;
-//                    value2 = 0;
-//                }
 
                 int red = (int) (255 * value1);
                 int green = (int) (255 * value2);
